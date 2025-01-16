@@ -12,8 +12,9 @@ public class Bomb extends Square {
 
     @Override
     public void printSymbol() {
-        //TODO implement game over
+        System.out.print("B");
     }
+
 
 
 }
