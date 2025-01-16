@@ -55,13 +55,38 @@ public class Grid {
 
     }
 
-    public Grid populateGrid(Grid game){
+    public void populateGrid(){
 
-        int area = game.getX() * game.getY();
+        //TODO implement difficulty
+        double bombRate = 0.3;
+        Square[][] gameGrid = this.getGrid();
+
+        for(int x = 0; x < this.getX(); x++){
+            for(int y = 0; y < this.getY(); y++){
+                if(Math.random() < bombRate){
+                    Bomb bomb = new Bomb();
+                    gameGrid[x][y] = bomb;
+                }else{
+                    Empty blank = new Empty();
+                    gameGrid[x][y] = blank;
+                }
+
+            }
+        }
 
 
-        return game
+        this.setGrid(gameGrid);
 
+    }
+
+    public void printGrid(){
+        Square[][] squares = this.getGrid();
+        for(int x = 0; x < this.getX(); x++){
+            for(int y = 0; y < this.getY(); y++){
+                squares[x][y].printType();
+            }
+            System.out.print("\n");
+        }
     }
 
 }

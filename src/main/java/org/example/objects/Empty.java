@@ -1,9 +1,9 @@
 package org.example.objects;
 
-public class Bomb extends Square {
+public class Empty extends Square{
 
     public void printType(){
-        System.out.print("B");
+        System.out.print("E");
     }
 
 

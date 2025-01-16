@@ -18,6 +18,8 @@ public abstract class Square {
         this.revealed = revealed;
     }
 
+    public abstract void printType();
+
     protected boolean flagged;
     protected boolean revealed;
 }
