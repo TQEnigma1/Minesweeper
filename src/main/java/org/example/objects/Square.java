@@ -6,6 +6,16 @@ public abstract class Square {
     protected int y;
     protected boolean revealed = false;
 
+    public boolean isFlagged() {
+        return isFlagged;
+    }
+
+    public void setFlagged(boolean flagged) {
+        isFlagged = flagged;
+    }
+
+    protected boolean isFlagged = false;
+
     public boolean isRevealed() {
         return revealed;
     }
@@ -16,6 +26,7 @@ public abstract class Square {
 
     public abstract void printType();
 
+    public abstract void printSymbol();
 
 
     public int getX() {

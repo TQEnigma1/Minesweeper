@@ -8,4 +8,9 @@ public class Blank extends Square{
     public void printType(){
         System.out.print("|");
     }
+
+    @Override
+    public void printSymbol() {
+        //Do nothing
+    }
 }

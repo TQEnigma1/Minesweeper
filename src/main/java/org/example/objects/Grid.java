@@ -1,5 +1,6 @@
 package org.example.objects;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Grid {
@@ -45,7 +46,50 @@ public class Grid {
 
     private Square[][] grid;
 
-    public static Grid generateGrid(){
+    public static void startGame(){
+        Grid game = generateGrid();
+        game.populateGrid();
+        game.bombDetection();
+        game.printGrid();
+        game.displayGrid();
+
+
+
+
+    }
+
+    private void haveTurn(Grid game){
+
+    }
+
+    private void bombDetection(){
+        //similate moving a 3x3 window over each of the points and count the bombs, there is defo a quicker way doing funky maths
+
+
+        int[][] mask = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1,1}};
+        int tot = 0;
+        for(int x = 1; x < this.getX()+2; x++){
+            for(int y = 1; y < this.getY()+2; y++){
+                if(this.getSquare(x,y) instanceof Empty){
+
+                    for (int[] m : mask) {
+                        //System.out.println((x + m[0]) + " " + (y + m[1]));
+                        if (this.getSquare(x + m[0], y + m[1]) instanceof Bomb) {
+                            tot += 1;
+                        }
+                    }
+
+                    ((Empty) this.getSquare(x, y)).setSurroundingBombs(tot);
+                    System.out.println(x+ " " + y + " " + tot);
+                    tot = 0;
+                }
+
+            }
+        }
+
+    }
+
+    private static Grid generateGrid(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Provide grid height");
         int height = Integer.parseInt(scanner.next());
@@ -59,7 +103,7 @@ public class Grid {
 
     }
 
-    public void populateGrid(){
+    private void populateGrid(){
 
         //TODO implement difficulty
         double bombRate = 0.3;
@@ -92,13 +136,15 @@ public class Grid {
         this.setGrid(gameGrid);
     }
 
-    public void displayGrid(){
+    private void displayGrid(){
 
         for(int x = 1; x <= this.getX(); x++){
             for(int y = 1; y<= this.getY(); y++){
 
-                if(this.getSquare(x,y).isRevealed()){
-                    //TODO do stuff
+                if(this.getSquare(x,y).isFlagged()){
+                    System.out.print("F");
+                }else if(this.getSquare(x,y).isRevealed()){
+                    this.getSquare(x,y).printSymbol();
                 }else{
                     System.out.print("█");
                 }
@@ -109,7 +155,7 @@ public class Grid {
 
 
     }
-
+    //debug method
     public void printGrid(){
         Square[][] squares = this.getGrid();
 

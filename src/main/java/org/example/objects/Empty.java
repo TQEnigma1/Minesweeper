@@ -14,12 +14,21 @@ public class Empty extends Square{
         this.surroundingBombs = surroundingBombs;
     }
 
-    int surroundingBombs;
+    int surroundingBombs = 0;
 
 
 
     public void printType(){
         System.out.print("E");
+    }
+
+    @Override
+    public void printSymbol() {
+        if (surroundingBombs != 0){
+            System.out.print(surroundingBombs);
+        }else{
+            System.out.print(" ");
+        }
     }
 
 

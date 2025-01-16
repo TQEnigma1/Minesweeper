@@ -7,8 +7,7 @@ import org.example.objects.Grid;
 public class Main {
     public static void main(String[] args) {
 
-        Grid game = Grid.generateGrid();
-        game.populateGrid();
-        game.displayGrid();
+        Grid.startGame();
+
     }
 }
