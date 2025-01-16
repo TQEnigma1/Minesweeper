@@ -24,6 +24,10 @@ public class Grid {
         return grid;
     }
 
+    public Square getSquare(int x, int y){
+        return this.grid[x][y];
+    }
+
     public void setGrid(Square[][] grid) {
         this.grid = grid;
     }
@@ -43,14 +47,14 @@ public class Grid {
 
     public static Grid generateGrid(){
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Provide grid height");
+        int height = Integer.parseInt(scanner.next());
         System.out.println("Provide grid width");
         int width = Integer.parseInt(scanner.next());
-        System.out.println("Provide grid length");
-        int length = Integer.parseInt(scanner.next());
+        //Therefore the game grid has invisible padding around the edges to make my life easier
+        Square[][] squares = new Square[height+2][width+2];
 
-        Square[][] squares = new Square[width][length];
-
-        return new Grid(width, length, squares);
+        return new Grid(height, width, squares);
 
 
     }
@@ -61,28 +65,57 @@ public class Grid {
         double bombRate = 0.3;
         Square[][] gameGrid = this.getGrid();
 
-        for(int x = 0; x < this.getX(); x++){
-            for(int y = 0; y < this.getY(); y++){
-                if(Math.random() < bombRate){
-                    Bomb bomb = new Bomb();
-                    gameGrid[x][y] = bomb;
-                }else{
-                    Empty blank = new Empty();
+        for(int x = 0; x <= this.getX()+1; x++){
+            for(int y = 0; y <= this.getY()+1; y++){
+
+                if(x == 0 || y == 0 || x == this.getX()+1 || y == this.getY()+1){
+                    Blank blank = new Blank(x, y);
+
                     gameGrid[x][y] = blank;
+
+                }else{
+                    if(Math.random() < bombRate){
+                        Bomb bomb = new Bomb(x, y);
+
+                        gameGrid[x][y] = bomb;
+                    }else{
+                        Empty empty = new Empty(x, y);
+
+                        gameGrid[x][y] = empty;
+                    }
                 }
+
+
 
             }
         }
-
-
         this.setGrid(gameGrid);
+    }
+
+    public void displayGrid(){
+
+        for(int x = 1; x <= this.getX(); x++){
+            for(int y = 1; y<= this.getY(); y++){
+
+                if(this.getSquare(x,y).isRevealed()){
+                    //TODO do stuff
+                }else{
+                    System.out.print("█");
+                }
+
+            }
+            System.out.print("\n");
+        }
+
 
     }
 
     public void printGrid(){
         Square[][] squares = this.getGrid();
-        for(int x = 0; x < this.getX(); x++){
-            for(int y = 0; y < this.getY(); y++){
+
+        for(int x = 0; x <= this.getX()+1; x++){
+            for(int y = 0; y <= this.getY()+1; y++){
+               // System.out.print(x + " " + y);
                 squares[x][y].printType();
             }
             System.out.print("\n");
