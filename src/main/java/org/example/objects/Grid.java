@@ -7,6 +7,18 @@ import static java.lang.System.exit;
 
 public class Grid {
 
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+
+    long startTime;
+
+
     public int getX() {
         return x;
     }
@@ -39,8 +51,27 @@ public class Grid {
         this.grid = grid;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    private int score;
     private int x;
     private int y;
+
+    public int getNotRevealed() {
+        return notRevealed;
+    }
+
+    public void setNotRevealed(int notRevealed) {
+        this.notRevealed = notRevealed;
+    }
+
+    private int notRevealed;
 
     public int getDifficulty() {
         return difficulty;
@@ -94,32 +125,36 @@ public class Grid {
     public static void startGame(){
 
 
-        Grid game = generateGrid();
-
         System.out.println("Welcome to Minesweeper, enter your grid size and start playing");
-        System.out.println("To dig a square, just enter the format 'x,y', to flag a square enter in the format f'x,y'");
+        System.out.println("To dig a square, just enter the format 'x,y', to flag a square enter in the format 'x,yf'");
+        System.out.println("Guesses are column then row");
         Scanner scanner = new Scanner(System.in);
-
+        int diffLvl = 1;
         boolean flag = false;
         do{
             System.out.println("Please enter a difficulty level: 1-5; this will affect the amount of bombs");
-            if(scanner.next().matches("[12345]]")) {
-                game.setDifficulty(Integer.parseInt(scanner.next()));
+            String answer = scanner.next();
+            if(answer.matches("[12345]")) {
+                diffLvl = Integer.parseInt(answer);
                 flag = true;
             }
-        }while(flag);
-
+        }while(!flag);
+        Grid game = generateGrid();
+        game.setDifficulty(diffLvl);
+        System.out.println(game.getDifficulty());
         game.populateGrid();
         game.bombDetection();
         game.printGrid();
         game.displayGrid();
 
         System.out.println("Begin game");
-
+        game.setStartTime(System.currentTimeMillis() / 1000);
         while(!game.isGameOver()){
             game.haveTurn();
             game.displayGrid();
         }
+
+
 
         scanner.close();
 
@@ -130,7 +165,9 @@ public class Grid {
         String guess = scanner.next();
         processGuess(guess);
         this.setTurnNumber(this.getTurnNumber()+1);
-        scanner.close();
+        if(this.getNumOfBombs() == this.getNotRevealed()){
+            processWin();
+        }
     }
 
     private void processGuess(String guess){
@@ -140,8 +177,6 @@ public class Grid {
             int guessX = Integer.parseInt(guess.split(",")[0]);
             int guessY = Integer.parseInt(guess.split(",")[1].split("f")[0]);
 
-            System.out.println("guessX: " +guessX);
-            System.out.println("guessY:" + guessY);
 
             if(guessX <= this.getX() && guessY <= this.getY()){
 
@@ -188,12 +223,14 @@ public class Grid {
 
     }
 
+    final int[][] mask = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1,1}};
+
     private void updateReveal(Empty guessSquare){
 
         guessSquare.setRevealed(true);
-
+        this.setNotRevealed(this.getNotRevealed() - 1);
         if (guessSquare.getSurroundingBombs() == 0) {
-            int[][] mask = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
+
             for (int[] m : mask) {
                 //System.out.println((x + m[0]) + " " + (y + m[1]));
                 Square newSquare = this.getSquare(guessSquare.getX() + m[0], guessSquare.getY() + m[1]);
@@ -209,10 +246,7 @@ public class Grid {
     }
 
     private void bombDetection(){
-        //similate moving a 3x3 window over each of the points and count the bombs, there is defo a quicker way doing funky maths
 
-
-        int[][] mask = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1,1}};
         int tot = 0;
         for(int x = 1; x < this.getX()+2; x++){
             for(int y = 1; y < this.getY()+2; y++){
@@ -226,7 +260,7 @@ public class Grid {
                     }
 
                     ((Empty) this.getSquare(x, y)).setSurroundingBombs(tot);
-                    System.out.println(x+ " " + y + " " + tot);
+                    //System.out.println(x+ " " + y + " " + tot);
                     tot = 0;
                 }
 
@@ -243,7 +277,7 @@ public class Grid {
         int width = Integer.parseInt(scanner.next());
         //Therefore the game grid has invisible padding around the edges to make my life easier
         Square[][] squares = new Square[height+2][width+2];
-        scanner.close();
+
         return new Grid(height, width, squares);
 
 
@@ -251,8 +285,9 @@ public class Grid {
 
     private void populateGrid(){
 
-        //TODO implement difficulty
+
         double bombRate = 0.1 * this.getDifficulty();
+        System.out.println("BOMB RATE: " + bombRate);
         Square[][] gameGrid = this.getGrid();
         int bombTot = 0;
         for(int x = 0; x <= this.getX()+1; x++){
@@ -280,36 +315,48 @@ public class Grid {
             }
         }
         this.setNumOfBombs(bombTot);
+        this.setNotRevealed(this.getX() * this.getY());
         this.setGrid(gameGrid);
     }
 
     private void displayGrid(){
 
-        int tmp = this.getNumOfBombs();
+
 
         for(int x = 1; x <= this.getX(); x++){
             for(int y = 1; y<= this.getY(); y++){
 
                 if(this.getSquare(x,y).isFlagged()){
-                    System.out.print("F");
+                    System.out.print(" [F] ");
                 }else if(this.getSquare(x,y).isRevealed()){
                     this.getSquare(x,y).printSymbol();
-                    tmp -= 1;
+
                 }else{
-                    System.out.print("█");
+                    System.out.print(" [█] ");
                 }
 
             }
             System.out.print("\n");
         }
 
-        if(tmp <= 0){
-            System.out.println("Congratulations you found all the bombs, you win!!!");
-            this.setGameOver(true);
-        }
-
-
     }
+
+    public void processWin(){
+        System.out.println("Congratulations you found all the bombs, you win!!!");
+        long timeDelta = (System.currentTimeMillis()/1000) - this.getStartTime();
+        System.out.println("This run took you: " + timeDelta + " seconds");
+
+        this.setScore(this.getX() * this.getY() * this.getDifficulty());
+        System.out.println("You scored: " + this.getScore());
+
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.addToLeaderboard(this.getScore(), (int) timeDelta);
+        leaderboard.displayLeaderboard();
+
+        this.setGameOver(true);
+    }
+
+
     //debug method
     public void printGrid(){
         Square[][] squares = this.getGrid();

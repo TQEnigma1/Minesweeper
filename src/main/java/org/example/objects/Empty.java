@@ -25,9 +25,9 @@ public class Empty extends Square{
     @Override
     public void printSymbol() {
         if (surroundingBombs != 0){
-            System.out.print(surroundingBombs);
+            System.out.print(" [" + surroundingBombs + "] ");
         }else{
-            System.out.print(" ");
+            System.out.print(" [ ] ");
         }
     }
 
