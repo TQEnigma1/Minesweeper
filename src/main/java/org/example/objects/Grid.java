@@ -15,6 +15,15 @@ public class Grid {
         this.startTime = startTime;
     }
 
+    public long getTimeTaken() {
+        return timeTaken;
+    }
+
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
+    }
+
+    public long timeTaken;
 
     long startTime;
 
@@ -154,6 +163,9 @@ public class Grid {
             game.displayGrid();
         }
 
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.addToLeaderboard(game.getScore(), (int) game.getTimeTaken());
+        leaderboard.displayLeaderboard();
 
 
         scanner.close();
@@ -345,13 +357,9 @@ public class Grid {
         System.out.println("Congratulations you found all the bombs, you win!!!");
         long timeDelta = (System.currentTimeMillis()/1000) - this.getStartTime();
         System.out.println("This run took you: " + timeDelta + " seconds");
-
+        this.setTimeTaken(timeDelta);
         this.setScore(this.getX() * this.getY() * this.getDifficulty());
         System.out.println("You scored: " + this.getScore());
-
-        Leaderboard leaderboard = new Leaderboard();
-        leaderboard.addToLeaderboard(this.getScore(), (int) timeDelta);
-        leaderboard.displayLeaderboard();
 
         this.setGameOver(true);
     }

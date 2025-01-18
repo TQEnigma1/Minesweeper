@@ -57,25 +57,31 @@ public class Leaderboard {
         Scanner consoleScanner = new Scanner(System.in);
         System.out.println("Please enter your name for the leaderboard");
         String name = consoleScanner.next();
-        String newEntry = name + ", " + score + ", " + time;
+        String newEntry = name + "," + score + "," + time;
         LinkedList<String> lBoard = this.getLeaderboard();
         int pos = 0;
-        for(int x = 0; x < lBoard.size(); x++){
+        int theSize = lBoard.size();
 
-           int[] entry = processEntry(lBoard.get(x));
-           if(score > entry[0]){
-               lBoard.add(x, newEntry);
-               pos = x;
-           }else if(score == entry[0]) {
-               if(time >= entry[1]){
-                   lBoard.add(x, newEntry);
-                   pos = x;
+        for(int x = 0; x <theSize; x++){
+
+            int[] entry = processEntry(lBoard.get(x));
+            if(score > entry[0]){
+                lBoard.add(x, newEntry);
+                pos = x;
+            }else if(score == entry[0]) {
+                if(time >= entry[1]){
+                    lBoard.add(x, newEntry);
+                    pos = x;
                }
-           }
+            }else if(x == theSize - 1){
+                lBoard.addLast(newEntry);
+                pos = theSize;
+            }
+
 
         }
 
-        System.out.println("You are in position: " + pos+1);
+        System.out.println("You are in position: " + (pos+1));
         this.setLeaderboard(lBoard);
 
 
