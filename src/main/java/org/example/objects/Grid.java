@@ -166,6 +166,7 @@ public class Grid {
         Leaderboard leaderboard = new Leaderboard();
         leaderboard.addToLeaderboard(game.getScore(), (int) game.getTimeTaken());
         leaderboard.displayLeaderboard();
+        leaderboard.writeLeaderboard();
 
 
         scanner.close();

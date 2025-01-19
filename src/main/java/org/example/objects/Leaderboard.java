@@ -2,6 +2,7 @@ package org.example.objects;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -66,35 +67,59 @@ public class Leaderboard {
 
             int[] entry = processEntry(lBoard.get(x));
             if(score > entry[0]){
+                System.out.println("cond1");
                 lBoard.add(x, newEntry);
                 pos = x;
+                break;
             }else if(score == entry[0]) {
-                if(time >= entry[1]){
+                if(time <= entry[1]){
+                    System.out.println("cond2");
                     lBoard.add(x, newEntry);
                     pos = x;
+                    break;
                }
-            }else if(x == theSize - 1){
+            }else if(x <= theSize - 1){
+                System.out.println("cond3");
                 lBoard.addLast(newEntry);
                 pos = theSize;
+                break;
             }
 
 
         }
 
         System.out.println("You are in position: " + (pos+1));
+        System.out.println(lBoard);
         this.setLeaderboard(lBoard);
 
 
     }
 
     private int[] processEntry(String entry){
-
+        System.out.println(entry);
         int score = Integer.parseInt(entry.split(",")[1]);
         int time = Integer.parseInt(entry.split(",")[2]);
         int[] arr = new int[2];
         arr[0] = score;
         arr[1] = time;
         return arr;
+    }
+
+    public void writeLeaderboard(){
+
+
+        try {
+            FileWriter writer = new FileWriter("src/main/resources/Leaderboard.txt");
+            for (String s : this.leaderboard) {
+                writer.write(s+"\n");
+
+                System.out.println(s);
+            }
+            writer.close();
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.toString());
+        }
     }
 
 }
