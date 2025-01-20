@@ -26,7 +26,7 @@ public abstract class Square {
 
     public abstract void printType();
 
-    public abstract void printSymbol();
+
 
 
     public int getX() {

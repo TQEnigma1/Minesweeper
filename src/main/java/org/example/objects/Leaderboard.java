@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+import static org.example.objects.Display.displayConsole;
+
 public class Leaderboard {
 
     public LinkedList<String> getLeaderboard() {
@@ -56,7 +58,7 @@ public class Leaderboard {
     public void addToLeaderboard(int score, int time){
 
         Scanner consoleScanner = new Scanner(System.in);
-        System.out.println("Please enter your name for the leaderboard");
+        displayConsole("Please enter your name for the leaderboard\n");
         String name = consoleScanner.next();
         String newEntry = name + "," + score + "," + time;
         LinkedList<String> lBoard = this.getLeaderboard();
@@ -64,22 +66,22 @@ public class Leaderboard {
         int theSize = lBoard.size();
 
         for(int x = 0; x <theSize; x++){
-
             int[] entry = processEntry(lBoard.get(x));
+            System.out.println(score + " " + entry[0]);
             if(score > entry[0]){
-                System.out.println("cond1");
+
                 lBoard.add(x, newEntry);
                 pos = x;
                 break;
             }else if(score == entry[0]) {
                 if(time <= entry[1]){
-                    System.out.println("cond2");
+
                     lBoard.add(x, newEntry);
                     pos = x;
                     break;
                }
-            }else if(x <= theSize - 1){
-                System.out.println("cond3");
+            }else if(x == theSize - 1){
+
                 lBoard.addLast(newEntry);
                 pos = theSize;
                 break;
@@ -89,14 +91,13 @@ public class Leaderboard {
         }
 
         System.out.println("You are in position: " + (pos+1));
-        System.out.println(lBoard);
         this.setLeaderboard(lBoard);
 
 
     }
 
     private int[] processEntry(String entry){
-        System.out.println(entry);
+
         int score = Integer.parseInt(entry.split(",")[1]);
         int time = Integer.parseInt(entry.split(",")[2]);
         int[] arr = new int[2];
@@ -113,7 +114,7 @@ public class Leaderboard {
             for (String s : this.leaderboard) {
                 writer.write(s+"\n");
 
-                System.out.println(s);
+
             }
             writer.close();
         }

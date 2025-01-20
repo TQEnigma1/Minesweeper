@@ -10,10 +10,7 @@ public class Bomb extends Square {
         System.out.print("B");
     }
 
-    @Override
-    public void printSymbol() {
-        System.out.print(" [B] ");
-    }
+
 
 
 
