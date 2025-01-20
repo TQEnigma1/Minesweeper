@@ -133,12 +133,10 @@ public class Grid {
 
     public static void startGame(){
 
-        Gui.makeGui();
-
 
         Display.displayConsole("Welcome to Minesweeper, enter your grid size and start playing\n");
         Display.displayConsole("To dig a square, just enter the format 'x,y', to flag a square enter in the format 'x,yf'\n");
-        Display.displayConsole("Guesses are column then row");
+        Display.displayConsole("Guesses are column then row\n");
         Scanner scanner = new Scanner(System.in);
         int diffLvl = 1;
         boolean flag = false;
@@ -154,7 +152,7 @@ public class Grid {
         game.setDifficulty(diffLvl);
         game.populateGrid();
         game.bombDetection();
-        game.printGrid();
+        //game.printGrid();
         Display.displayConsole(game);
 
         Display.displayConsole("Begin game\n");
@@ -164,10 +162,6 @@ public class Grid {
             Display.displayConsole(game);
         }
 
-        Leaderboard leaderboard = new Leaderboard();
-        leaderboard.addToLeaderboard(game.getScore(), (int) game.getTimeTaken());
-        leaderboard.displayLeaderboard();
-        leaderboard.writeLeaderboard();
 
 
         scanner.close();
@@ -248,7 +242,7 @@ public class Grid {
             for (int[] m : mask) {
                 //Display.displayConsole((x + m[0]) + " " + (y + m[1]));
                 Square newSquare = this.getSquare(guessSquare.getX() + m[0], guessSquare.getY() + m[1]);
-                if(!newSquare.isRevealed() && newSquare instanceof Empty e ){
+                if(!newSquare.isRevealed() && newSquare instanceof Empty e && !e.isFlagged() ){
                     updateReveal(e);
                 }
 
@@ -301,7 +295,6 @@ public class Grid {
 
 
         double bombRate = 0.1 * this.getDifficulty();
-        Display.displayConsole("BOMB RATE: " + bombRate + "\n");
         Square[][] gameGrid = this.getGrid();
         int bombTot = 0;
         for(int x = 0; x <= this.getX()+1; x++){
@@ -342,6 +335,11 @@ public class Grid {
         this.setTimeTaken(timeDelta);
         this.setScore(this.getX() * this.getY() * this.getDifficulty());
         Display.displayConsole("You scored: " + this.getScore() + "\n");
+
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.addToLeaderboard(this.getScore(), (int) this.getTimeTaken());
+        leaderboard.displayLeaderboard();
+        leaderboard.writeLeaderboard();
 
         this.setGameOver(true);
     }
