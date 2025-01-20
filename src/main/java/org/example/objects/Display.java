@@ -1,52 +1,57 @@
 package org.example.objects;
 
+import java.util.Scanner;
+
 public class Display {
 
-      public static void displayConsole(Grid grid){
+      public static void display(Grid grid){
 
 
         for(int x = 0; x <= grid.getX(); x++){
             for(int y = 0; y<= grid.getY(); y++){
 
                 if(x == 0){
-                    displayConsole(" _" +Integer.toString(y).substring(Integer.toString(y).length() - 1)+"_ ");
+                    display(" _" +Integer.toString(y).substring(Integer.toString(y).length() - 1)+"_ ");
                 }else if(y == 0){
-                    displayConsole(" _" +Integer.toString(x).substring(Integer.toString(x).length() - 1)+"_ ");
+                    display(" _" +Integer.toString(x).substring(Integer.toString(x).length() - 1)+"_ ");
                 }else{
                     if(grid.getSquare(x,y).isFlagged()){
-                        displayConsole(" [F] ");
+                        display(" [F] ");
                     }else if(grid.getSquare(x,y).isRevealed()){
-                        displayConsole(grid.getSquare(x,y));
+                        display(grid.getSquare(x,y));
 
                     }else{
-                        displayConsole(" [█] ");
+                        display(" [█] ");
                     }
                 }
 
-
-
-
             }
-            displayConsole("\n");
+            display("\n");
         }
     }
 
-    public static void displayConsole(String s){
+    public static void display(String s){
         System.out.print(s);
     }
 
 
 
-    public static void displayConsole(Square square){
+    public static void display(Square square){
         if(square instanceof Bomb){
-            displayConsole(" [B] ");
+            display(" [B] ");
         }else if(square instanceof Empty e){
             if (e.surroundingBombs != 0){
-                displayConsole(" [" + e.surroundingBombs + "] ");
+                display(" [" + e.surroundingBombs + "] ");
             }else{
-                displayConsole(" [ ] ");
+                display(" [ ] ");
             }
         }
+    }
+
+    public static String getInput(){
+        Scanner scan = new Scanner(System.in);
+        return scan.next();
+
     }
 
 }
