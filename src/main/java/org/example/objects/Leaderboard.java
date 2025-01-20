@@ -23,7 +23,7 @@ public class Leaderboard {
     //extract out later
     public void displayLeaderboard(){
         for(String s : this.getLeaderboard()){
-            System.out.println(s);
+            displayConsole(s +"\n");
         }
     }
 
@@ -31,29 +31,7 @@ public class Leaderboard {
         readLeaderboard();
     }
 
-    private void readLeaderboard(){
 
-        LinkedList<String> s = new LinkedList<>();
-
-        try {
-
-            BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/Leaderboard.txt"));
-            String line = reader.readLine();
-            while(line != null){
-                s.add(line);
-                line = reader.readLine();
-            }
-
-
-            reader.close();
-
-            this.setLeaderboard(s);
-        }
-        catch (Exception e) {
-            System.out.println("Error: " + e.toString());
-        }
-
-    }
 
     public void addToLeaderboard(int score, int time){
 
@@ -107,20 +85,11 @@ public class Leaderboard {
     }
 
     public void writeLeaderboard(){
+        LeaderboardLoader.writeLeaderboard(this);
+    }
 
-
-        try {
-            FileWriter writer = new FileWriter("src/main/resources/Leaderboard.txt");
-            for (String s : this.leaderboard) {
-                writer.write(s+"\n");
-
-
-            }
-            writer.close();
-        }
-        catch (Exception e) {
-            System.out.println("Error: " + e.toString());
-        }
+    private void readLeaderboard(){
+        LeaderboardLoader.readLeaderboard();
     }
 
 }

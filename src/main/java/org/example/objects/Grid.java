@@ -141,9 +141,9 @@ public class Grid {
         int diffLvl = 1;
         boolean flag = false;
         do{
-            Display.displayConsole("Please enter a difficulty level: 1-5; this will affect the amount of bombs\n");
+            Display.displayConsole("Please enter a difficulty level: 1-50; this will affect the amount of bombs\n");
             String answer = scanner.next();
-            if(answer.matches("[12345]")) {
+            if(answer.matches("[1-9][0-9]*")) {
                 diffLvl = Integer.parseInt(answer);
                 flag = true;
             }
@@ -294,7 +294,7 @@ public class Grid {
     private void populateGrid(){
 
 
-        double bombRate = 0.1 * this.getDifficulty();
+        double bombRate = 0.01 * this.getDifficulty();
         Square[][] gameGrid = this.getGrid();
         int bombTot = 0;
         for(int x = 0; x <= this.getX()+1; x++){
@@ -333,7 +333,7 @@ public class Grid {
         long timeDelta = (System.currentTimeMillis()/1000) - this.getStartTime();
         Display.displayConsole("This run took you: " + timeDelta + " seconds\n");
         this.setTimeTaken(timeDelta);
-        this.setScore(this.getX() * this.getY() * this.getDifficulty());
+        this.setScore((int) (this.getX() * this.getY() * this.getDifficulty() * 0.1));
         Display.displayConsole("You scored: " + this.getScore() + "\n");
 
         Leaderboard leaderboard = new Leaderboard();
